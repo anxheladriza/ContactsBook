@@ -1,0 +1,139 @@
+﻿@model ContactsBook.Models.Contact
+
+@{
+    ViewBag.Title = "Contact Details";
+}
+
+<h2>@Html.DisplayFor(model => model.FirstName)  @Html.DisplayFor(model => model.LastName)</h2>
+<br />
+<br />
+
+@*tabela e Email*@
+@if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+{
+    <h5>@Html.ActionLink("Add New Email", "AddEmail", new { contactId = Model.Id })</h5>
+}
+<table class="table table-bordered">
+    <tr>
+        <th>
+            Email Addresses
+        </th>
+        @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+        {
+            <th>Options</th>
+        }
+    </tr>
+
+    @foreach (var email in Model.Emails)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => email.EmailAddress)
+            </td>
+            @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+            {
+                <td>
+                    @Html.ActionLink("Edit", "EditEmail", new { id = email.Id }) |
+                    @Html.ActionLink("Delete", "DeleteEmail", new { id = email.Id })
+                </td>
+            }
+
+        </tr>
+    }
+
+</table>
+@*mbaroi Email*@
+
+
+
+<br />
+<br />
+
+@*Tabele e Numrave*@
+@if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+{
+    <h5>@Html.ActionLink("Add New Number", "AddPhoneNumber", new { contactId = Model.Id })</h5>
+}
+<table class="table table-bordered">
+    <tr>
+        <th>
+            Phone Numbers
+        </th>
+        @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+        {
+            <th>Options</th>
+        }
+
+    </tr>
+
+    @foreach (var number in Model.PhoneNumbers)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => number.Number)
+
+            </td>
+            @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+            {
+
+                @Html.ActionLink("Delete", "DeleteAddress", new { id = number.Id })
+                <td>
+
+                    @Html.ActionLink("Edit", "EditPhoneNumber", new { id = number.Id }) |
+                    @Html.ActionLink("Delete", "DeleteNumber", new { id = number.Id })
+
+                </td>
+            }
+        </tr>
+    }
+
+</table>
+<br />
+<br />
+
+@*tabela e adresave*@
+@if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+{
+
+    <h5>@Html.ActionLink("Add New Address", "CreateAddress", new { contactId = Model.Id })</h5>
+}
+<table class="table table-bordered">
+    <tr>
+        <th>
+            Country
+        </th>
+        <th>City  </th>
+        <th>Street </th>
+        @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+        {
+            <th> Options</th>
+        }
+    </tr>
+    @foreach (var address in Model.Addresses)
+    {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => address.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => address.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => address.StreetAddress)
+            </td>
+            @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+            {
+                <td>
+                    @Html.ActionLink("Edit", "EditAddress", new { id = address.Id }) |
+                    @Html.ActionLink("Delete", "DeleteAddress", new { id = address.Id })
+                </td>
+            }
+        </tr>
+    }
+
+</table>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

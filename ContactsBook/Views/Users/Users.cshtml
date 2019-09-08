@@ -1,0 +1,67 @@
+﻿@using ContactsBook.Models;
+@model List<User>
+@{
+    ViewBag.Title = "Users";
+}
+
+@if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+{
+
+    <h2>Users </h2>
+    <br />
+    <br />
+
+    <table class="table table-bordered">
+        <tr>
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Options
+            </th>
+
+        </tr>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.LastName)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Role.Description)
+                </td>
+
+                @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+                {
+                    <td>
+
+                        @Html.ActionLink("Delete", "DeleteUser", new { id = user.Id })
+                    </td>
+                }
+
+
+
+            </tr>
+        }
+
+    </table>
+
+}
+@Html.ActionLink("Back to List", "Index")
+

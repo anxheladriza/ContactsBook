@@ -1,0 +1,101 @@
+﻿@model IEnumerable<ContactsBook.Models.Contact>
+
+@{
+    ViewBag.Title = "Contacts";
+}
+
+<h2>CONTACT BOOK</h2>
+
+<p>
+    @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+    {
+        @Html.ActionLink("Create New", "CreateContact")
+    }
+</p>
+<form asp-controller="Contacts" asp-action="Index" method="get">
+    <p>
+        Search Contact <input type="text" name="SearchString">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            Phone Number
+        </th>
+
+        <th>
+            Email
+        </th>
+        <th>
+            Address
+        </th>
+        <th> Options </th>
+
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var email = "";
+        var phone = "";
+        var address = "";
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @if (item.PhoneNumbers.ToList().FirstOrDefault() != null)
+                {
+                    phone = item.PhoneNumbers.ToList().FirstOrDefault().Number;
+                }
+                @phone
+            </td>
+            <td>
+                @if (item.Emails.ToList().FirstOrDefault() != null)
+                {
+                    email = item.Emails.ToList().FirstOrDefault().EmailAddress;
+                }
+                @email
+            </td>
+            <td>
+                @if (item.Addresses.ToList().FirstOrDefault() != null)
+                {
+                    address = item.Addresses.ToList().FirstOrDefault().Country;
+                    address += " " + item.Addresses.ToList().FirstOrDefault().City;
+                    address += " " + item.Addresses.ToList().FirstOrDefault().StreetAddress;
+
+
+                }
+                @address
+            </td>
+            <td>
+                @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+                {
+                    @Html.ActionLink("Edit", "EditContact", new { id = item.Id })
+
+                }
+                @Html.ActionLink("Details", "ContactDetails", new { id = item.Id })
+
+                @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
+                {
+                    @Html.ActionLink("Delete", "DeleteContact", new { id = item.Id })
+                }
+            </td>
+
+        </tr>
+
+    }
+
+
+</table>
