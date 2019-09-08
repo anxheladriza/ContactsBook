@@ -41,7 +41,7 @@
 
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var contact in Model)
     {
         var email = "";
         var phone = "";
@@ -49,47 +49,48 @@
         <tr>
 
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
+                @Html.DisplayFor(modelItem => contact.FirstName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastName)
+                @Html.DisplayFor(modelItem => contact.LastName)
             </td>
             <td>
-                @if (item.PhoneNumbers.ToList().FirstOrDefault() != null)
+                @if (contact.PhoneNumbers.ToList().FirstOrDefault() != null)
                 {
-                    phone = item.PhoneNumbers.ToList().FirstOrDefault().Number;
+                    phone = contact.PhoneNumbers.ToList().FirstOrDefault().Number;
                 }
+
                 @phone
             </td>
             <td>
-                @if (item.Emails.ToList().FirstOrDefault() != null)
+                @if (contact.Emails.ToList().FirstOrDefault() != null)
                 {
-                    email = item.Emails.ToList().FirstOrDefault().EmailAddress;
+                    email = contact.Emails.ToList().FirstOrDefault().EmailAddress;
                 }
+
                 @email
             </td>
             <td>
-                @if (item.Addresses.ToList().FirstOrDefault() != null)
+                @if (contact.Addresses.ToList().FirstOrDefault() != null)
                 {
-                    address = item.Addresses.ToList().FirstOrDefault().Country;
-                    address += " " + item.Addresses.ToList().FirstOrDefault().City;
-                    address += " " + item.Addresses.ToList().FirstOrDefault().StreetAddress;
-
-
+                    address = contact.Addresses.ToList().FirstOrDefault().Country;
+                    address += " " + contact.Addresses.ToList().FirstOrDefault().City;
+                    address += " " + contact.Addresses.ToList().FirstOrDefault().StreetAddress;
                 }
+
                 @address
             </td>
             <td>
                 @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
                 {
-                    @Html.ActionLink("Edit", "EditContact", new { id = item.Id })
+                    @Html.ActionLink("Edit", "EditContact", new { id = contact.Id })
 
                 }
-                @Html.ActionLink("Details", "ContactDetails", new { id = item.Id })
+                @Html.ActionLink("Details", "ContactDetails", new { id = contact.Id })
 
                 @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
                 {
-                    @Html.ActionLink("Delete", "DeleteContact", new { id = item.Id })
+                    @Html.ActionLink("Delete", "DeleteContact", new { id = contact.Id })
                 }
             </td>
 
