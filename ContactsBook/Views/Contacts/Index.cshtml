@@ -10,12 +10,15 @@
     @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
     {
         @Html.ActionLink("Create New", "CreateContact")
+
     }
+  
 </p>
 <form asp-controller="Contacts" asp-action="Index" method="get">
     <p>
         Search Contact <input type="text" name="SearchString">
         <input type="submit" value="Filter" />
+        @Html.ActionLink("Download Excel", "Export")
     </p>
 </form>
 <table class="table table-striped">

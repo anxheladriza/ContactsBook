@@ -157,6 +157,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Address.cs" />
+    <Compile Include="Models\IsAuthorizedAttribute.cs" />
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\PhoneNumber.cs" />

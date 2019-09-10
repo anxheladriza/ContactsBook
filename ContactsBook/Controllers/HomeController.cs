@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace ContactsBook.Controllers
 {
@@ -35,6 +36,9 @@ namespace ContactsBook.Controllers
                     ModelState.AddModelError("Email", "User with this email is already registered!");
                     return View("Register", user);
                 }
+
+                user.Password = GetStringSha256Hash(user.Password);
+                user.ConfirmPassword = GetStringSha256Hash(user.ConfirmPassword);
                 user.RoleId = 2; //Shtojm guest user 
                 db.Users.Add(user);
                 db.SaveChanges();
@@ -57,7 +61,8 @@ namespace ContactsBook.Controllers
 
             if (loginUser != null)
             {
-                if (loginUser.Password == user.Password)
+
+                if (loginUser.Password == GetStringSha256Hash(user.Password))
                 {
                     Session.Add("IsLoggedIn", true);
                     Session.Add("UserName", loginUser.Email);
@@ -79,6 +84,19 @@ namespace ContactsBook.Controllers
             {
                 ModelState.AddModelError("Email", "User not found, please register first!");
                 return View("Login", user);
+            }
+        }
+
+        private string GetStringSha256Hash(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
+
+            using (var sha = new System.Security.Cryptography.SHA256Managed())
+            {
+                byte[] textData = System.Text.Encoding.UTF8.GetBytes(text);
+                byte[] hash = sha.ComputeHash(textData);
+                return BitConverter.ToString(hash).Replace("-", string.Empty);
             }
         }
 

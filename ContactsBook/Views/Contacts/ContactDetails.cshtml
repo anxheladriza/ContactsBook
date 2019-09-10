@@ -94,7 +94,6 @@
 @*tabela e adresave*@
 @if (Convert.ToBoolean(Session["IsAdmin"]) == true)
 {
-
     <h5>@Html.ActionLink("Add New Address", "CreateAddress", new { contactId = Model.Id })</h5>
 }
 <table class="table table-bordered">

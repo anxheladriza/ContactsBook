@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -29,6 +30,7 @@ namespace ContactsBook.Models
         public int RoleId { get; set; }
 
         [Required]
+        [NotMapped]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 

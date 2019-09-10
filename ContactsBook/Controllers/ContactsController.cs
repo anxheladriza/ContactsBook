@@ -13,19 +13,15 @@ using ContactsBook.Models;
 
 namespace ContactsBook.Controllers
 {
+    [IsAuthorized]
     public class ContactsController : Controller
     {
         private ContactBookContexts db = new ContactBookContexts();
 
-        //Lista e kontakteve
+        //Lista e kontakteve    
         [HttpGet]
         public ActionResult Index(string searchString)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             List<Contact> contacts = db.Contacts.ToList();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -41,14 +37,10 @@ namespace ContactsBook.Controllers
             return View(contacts);
         }
 
-        // GET: Contacts/Details/5
+        // GET: Contacts/Details/5       
         [HttpGet]
         public ActionResult ContactDetails(int? id)
-        {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
+        {  
 
             if (id == null)
             {
@@ -66,28 +58,21 @@ namespace ContactsBook.Controllers
 
 
         // GET: Kthen  view per krijimin e kontaktit
+        [IsAuthorized("Admin")]
         public ActionResult CreateContact()
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             return View("CreateContact");
         }
 
 
 
         // POST: Contacts/Create
+        [IsAuthorized("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateContact([Bind(Include = "Id,FirstName,LastName")] Contact contact)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
+           
             if (ModelState.IsValid)
             {
                 db.Contacts.Add(contact);
@@ -98,14 +83,11 @@ namespace ContactsBook.Controllers
             return View(contact);
         }
 
+
         //Kthen view per te edituar kontaktin
+        [IsAuthorized("Admin")]
         public ActionResult EditContact(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -121,13 +103,9 @@ namespace ContactsBook.Controllers
         //Ruajm kontaktin ne database
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [IsAuthorized("Admin")]
         public ActionResult EditContact([Bind(Include = "Id,FirstName,LastName")] Contact contact)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (ModelState.IsValid)
             {
                 db.Entry(contact).State = EntityState.Modified;
@@ -138,13 +116,9 @@ namespace ContactsBook.Controllers
         }
 
         // GET: Contacts/Delete/5
+        [IsAuthorized("Admin")]
         public ActionResult DeleteContact(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -163,13 +137,9 @@ namespace ContactsBook.Controllers
         // POST: Contacts/Delete/5
         [HttpPost, ActionName("DeleteContact")]
         [ValidateAntiForgeryToken]
+        [IsAuthorized("Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             Contact contact = db.Contacts.Find(id);
             db.Contacts.Remove(contact);
             db.SaveChanges();
@@ -177,15 +147,9 @@ namespace ContactsBook.Controllers
         }
 
 
-
         // GET: Emails
         public ActionResult GetContactEmails(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -197,27 +161,18 @@ namespace ContactsBook.Controllers
 
 
         // GET: Addresses/Create
+        [IsAuthorized("Admin")]
         public ActionResult CreateAddress()
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             return View("Addresses/CreateAddress");
         }
 
         //post Address
-
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [IsAuthorized("Admin")]
         public ActionResult CreateAddress([Bind(Include = "Id,Country,City,StreetAddress,ContactId")] Address address)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (ModelState.IsValid)
             {
                 db.Addresses.Add(address);
@@ -231,12 +186,9 @@ namespace ContactsBook.Controllers
 
 
         //GET: Address/Edit/5  krijon view-n per editim
+        [IsAuthorized("Admin")]
         public ActionResult EditAddress(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             if (id == null)
             {
@@ -251,14 +203,11 @@ namespace ContactsBook.Controllers
         }
 
         //POST : Address/Edit/
+        [IsAuthorized("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditAddress([Bind(Include = "Id,Country,City,StreetAddress,ContactId")] Address address)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             if (ModelState.IsValid)
             {
@@ -269,13 +218,9 @@ namespace ContactsBook.Controllers
             return View("Addresses/EditAddress", address);
         }
 
-
+        [IsAuthorized("Admin")]
         public ActionResult DeleteAddress(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             if (id == null)
             {
@@ -291,16 +236,12 @@ namespace ContactsBook.Controllers
         }
 
 
-
+        [IsAuthorized("Admin")]
         [HttpPost, ActionName("DeleteAddress")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteAddress(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
+            
             Address address = db.Addresses.Find(id);
             var contactId = address.ContactId;
             db.Addresses.Remove(address);
@@ -308,15 +249,9 @@ namespace ContactsBook.Controllers
             return RedirectToAction("ContactDetails", new { id = contactId });
         }
 
-
-
+        [IsAuthorized("Admin")]
         public ActionResult AddEmail(int? contactId)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (contactId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -328,17 +263,12 @@ namespace ContactsBook.Controllers
 
             return View("Emails/CreateEmail", model);
         }
-
+        [IsAuthorized("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddEmail([Bind(Include = "Id,EmailAddress,ContactId")]Email email)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 db.Emails.Add(email);
                 db.SaveChanges();
@@ -348,14 +278,12 @@ namespace ContactsBook.Controllers
             return RedirectToAction("Index");
         }
 
+        [IsAuthorized("Admin")]
         //delete email
         [HttpGet, ActionName("DeleteEmail")]
         public ActionResult DeleteEmail(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
+          
 
             if (id == null)
             {
@@ -372,14 +300,11 @@ namespace ContactsBook.Controllers
             return View("Emails/DeleteEmail", email);
         }
 
+        [IsAuthorized("Admin")]
         [HttpPost, ActionName("DeleteEmail")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteEmailConfirmed(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             Email email = db.Emails.Find(id);
             var contactId = email.ContactId;
@@ -388,14 +313,11 @@ namespace ContactsBook.Controllers
 
             return RedirectToAction("ContactDetails", new { id = contactId });
         }
-        //Add phone number 
 
+        //Add phone number 
+        [IsAuthorized("Admin")]
         public ActionResult AddPhoneNumber(int? contactId)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             if (contactId == null)
             {
@@ -407,16 +329,11 @@ namespace ContactsBook.Controllers
             return View("PhoneNumbers/AddPhoneNumber", model);
         }
 
-
+        [IsAuthorized("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddPhoneNumber([Bind(Include = "Id,Number,ContactId")]PhoneNumber phoneNumber)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (ModelState.IsValid)
             {
                 db.PhoneNumbers.Add(phoneNumber);
@@ -429,15 +346,10 @@ namespace ContactsBook.Controllers
 
         //delete number
 
-
+        [IsAuthorized("Admin")]
         [HttpGet, ActionName("DeleteNumber")]
         public ActionResult DeleteNumber(int? id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -453,15 +365,11 @@ namespace ContactsBook.Controllers
             return View("PhoneNumbers/DeleteNumber", phoneNumber);
         }
 
+        [IsAuthorized("Admin")]
         [HttpPost, ActionName("DeleteNumber")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteNumberConfirmed(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             PhoneNumber number = db.PhoneNumbers.Find(id);
             var contactId = number.ContactId;
             db.PhoneNumbers.Remove(number);
@@ -470,39 +378,26 @@ namespace ContactsBook.Controllers
             return RedirectToAction("ContactDetails", new { id = contactId });
         }
 
+        [IsAuthorized]
         public ActionResult EmailDetails(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             var email = db.Emails.Find(id);
             return View("Emails/EmailDetails", email);
         }
 
 
-
+        [IsAuthorized("Admin")]
         public ActionResult EditEmail(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             var email = db.Emails.Find(id);
             return View("Emails/EditEmail", email);
         }
 
-
+        [IsAuthorized(Role = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditEmail([Bind(Include = "Id,EmailAddress,ContactId")]Email email)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
 
             if (ModelState.IsValid)
             {
@@ -515,27 +410,19 @@ namespace ContactsBook.Controllers
         }
 
         //phone number
-
+        [IsAuthorized("Admin")]
         public ActionResult EditPhoneNumber(int id)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
             var number = db.PhoneNumbers.Find(id);
             return View("PhoneNumbers/EditPhoneNumber", number);
         }
 
+        [IsAuthorized("Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditPhoneNumber([Bind(Include = "Id,Number,ContactId")]PhoneNumber phoneNumber)
         {
-            if (!IsLoggedIn())
-            {
-                return RedirectToAction("Login", "Home");
-            }
-
+           
             if (ModelState.IsValid)
             {
                 db.Entry(phoneNumber).State = EntityState.Modified;
@@ -546,7 +433,7 @@ namespace ContactsBook.Controllers
             return RedirectToAction("Index");
         }
 
-
+      
         [HttpGet]
         public FileResult Export()
         {
@@ -587,18 +474,6 @@ namespace ContactsBook.Controllers
             }
 
             return File(workbookBytes, "application/vnd.ms-excel", "Grid.xls");
-        }
-
-
-
-        public bool IsLoggedIn()
-        {
-            if (Convert.ToBoolean(Session["IsLoggedIn"]))
-            {
-                return true;
-            }
-
-            return false;
         }
 
         protected override void Dispose(bool disposing)
